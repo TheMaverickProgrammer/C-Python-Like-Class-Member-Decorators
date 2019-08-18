@@ -308,8 +308,8 @@ We did it! We have a private implementation we wanted to decorate, and it acts o
 
 ```python
 class Foo:
-    def add(self, value):
-        self.value = self.value + value
+  def add(self, value):
+      self.value = self.value + value
 
 def stars(func):
   def inner(*args, **kwargs):
@@ -380,7 +380,7 @@ Bag cost $18.203
 We could reduce typing by adding a function-trait specialization for the following syntax
 
 ```cpp
-    // decltype yeilds T = double(apples*)(double, int)
+    // decltype yeilds T = double(apples::*)(double, int)
     memberfunc<decltype(&apples::calculate_cost_impl)> calculate_cost;
 ```
 
