@@ -7,7 +7,9 @@ In this second experiment, I re-imagine the way class member functions can be de
 
 How to write _class member_ decorator functions in modern C++14 or higher
 
-Works across MSVC, GNU CC, and Clang compilers
+Works 100% Clang compilers
+Works on latest MSVC with C++17
+Fails on GNU CC
 
 ### Skip the tutorial and view the final results
 ---
