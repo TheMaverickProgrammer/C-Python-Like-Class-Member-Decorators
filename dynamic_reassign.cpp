@@ -19,7 +19,6 @@ https://github.com/TheMaverickProgrammer/C-Python-Like-Class-Member-Decorators
 #include <type_traits>
 #include <string>
 #include <tuple>
-#include <variant>
 
 using namespace std::placeholders;
 using namespace std;
