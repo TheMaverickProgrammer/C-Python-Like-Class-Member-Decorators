@@ -8,6 +8,7 @@ In this second experiment, I re-imagining the way class member functions can be 
 ### Skip the tutorial and view the final results
 ---
 [decorated member functor with private class implementation](https://godbolt.org/z/rwUVeG)
+
 [dynamic member functor re-assignment](https://godbolt.org/z/ARNe-J)
 
 # The goal
