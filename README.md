@@ -5,6 +5,10 @@ In this second experiment, I re-imagine the way class member functions can be de
 
 # C++ Python-like Class Member Decorators
 
+How to write _class member_ decorator functions in modern C++14 or higher
+
+Works across MSVC, GNU CC, and Clang compilers
+
 ### Skip the tutorial and view the final results
 ---
 [decorated member functor with private class implementation](https://godbolt.org/z/rwUVeG)
