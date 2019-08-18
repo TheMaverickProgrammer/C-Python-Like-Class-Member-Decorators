@@ -13,7 +13,7 @@ Works across MSVC, GNU CC, and Clang compilers
 ---
 [decorated member functor with private class implementation](https://godbolt.org/z/rwUVeG)
 
-[dynamic member functor re-assignment](https://godbolt.org/z/ARNe-J)
+[dynamic member functor re-assignment](https://godbolt.org/z/dQq8JQ)
 
 # The goal
 We left off with a demonstration that class member functions could also be decorated but I wasn't satisfied with the syntax. To refresh, we left with something that looked like this:
@@ -304,9 +304,77 @@ class apples : public enable_memberfunc_traits<apples> {
 ```
 
 # Dynamic re-assignment 
-We did it! We have a private implementation we wanted to decorate, and it acts on `this` just like a member function! We wrote a `classmethod` universal visitor decorator and it's shaping up to be very flexible like Python. We've accomplished every goal for the member functors that we set out to achieve. There is one more tidbit I'd like to accomplish: in the previous article, Python allows us to dynamically re-assign functions.
+We did it! We have a private implementation we wanted to decorate, and it acts on `this` just like a member function! We wrote a `classmethod` universal visitor decorator and it's shaping up to be very flexible like Python. We've accomplished every goal for the member functors that we set out to achieve. There is one more tidbit I'd like to accomplish: in the previous article, Python allows us to assign a function to a decorated version of itself e.g.
 
-wip
+```python
+class Foo:
+    def add(self, value):
+        self.value = self.value + value
+
+def stars(func):
+  def inner(*args, **kwargs):
+      print("**********")
+      func(*args, **kwargs)
+      print("**********")
+      
+  return inner
+    
+Foo.add = stars(Foo.add)
+```
+
+The assignment `Foo.add = stars(Foo.add)` was impossible before but we now have a powerful member functor class. Let's add the ability to convert our member functor back into it's true lambda form by returning the inner `f` functor object:
+
+
+```cpp
+template<typename ClassType, typename RType, typename... Args>
+class class_memberfunc<ClassType, RType, std::tuple<Args...>> {
+    // ... omitted ....
+
+    std::function<RType(ClassType&, Args...)> operator*() {
+        return f;
+    }
+    
+    // ...
+};
+```
+
+Now, in order to dynamically decorate the private `calculate_cost_impl` implementation, **we must make it public**. This may shake some heads and it's worth noting that in Python, everything is public. There is no such thing as a private function or member variable in Python.
+
+Our crafty member functor can point to a class member function and be used as-is even without using the `classmethod` decorator
+
+[goto godbolt](https://godbolt.org/z/dQq8JQ)
+
+See line 198
+```cpp
+   // in apples ctor
+   this->calculate_cost = &apples::calculate_cost_impl;
+```
+
+Now we can dynamically decorate the member function. Plus we can assign a function to a decorated version of itself.
+
+Take a look at line 218 - 224
+
+```cpp
+   groceries1.calculate_cost = exception_fail_safe(classmethod(&apples::calculate_cost_impl));
+
+   // use star operator to return inner lambda and re-assign 
+   groceries1.calculate_cost = log_time(output(*groceries1.calculate_cost));
+
+   std::cout << std::endl;
+
+   groceries1.calculate_cost(5, 3.34);
+```
+
+output is
+
+```cpp
+18.203
+
+
+Bag cost $18.203
+
+> Logged at Sun Aug 18 18:00:15 2019
+```
 
 # Further Exploration
 We could reduce typing by adding a function-trait specialization for the following syntax
@@ -318,6 +386,8 @@ We could reduce typing by adding a function-trait specialization for the followi
 
 This would further reduce writing and could be seen as a "promise" to the compiler that the functor will match the decorated member function. 
 
-In short, there's more that can be explored with this concept. It has opened my eyes to new possibilities with C++ and I hope it has done the same for you too. 
+Ideally I wanted to use an implicit conversion operator to return `f` and avoid using an explicit star operator `operator*()`. However the compiler struggled to deduce my intentions. I can be satisfied with the fact that the star operator offers some readability.
+
+There's more that can be explored with this concept. It has opened my eyes to new possibilities with C++ and I hope it has done the same for you too. 
 
 Thank you for reading.
