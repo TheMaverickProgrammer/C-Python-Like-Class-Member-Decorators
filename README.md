@@ -8,18 +8,19 @@ In this second experiment, I re-imagine the way class member functions can be de
 How to write _class member_ decorator functions in modern C++14 or higher
 
 Works 100% on MSVC and Clang compilers
+
 Fails on GNU CC
 
 ### Skip the tutorial and view the final results
 ---
-[decorated member functor with private class implementation](https://godbolt.org/z/8VABuv)
+[decorated member functor with private class implementation](https://godbolt.org/z/3Q3rOE)
 
-[dynamic member functor re-assignment](https://godbolt.org/z/dQq8JQ)
+[dynamic member functor re-assignment](https://godbolt.org/z/cTB9S9)
 
 # The goal
 We left off with a demonstration that class member functions could also be decorated but I wasn't satisfied with the syntax. To refresh, we left with something that looked like this:
 
-[goto godbolt](https://godbolt.org/z/5OzQZ9)
+[goto godbolt](https://godbolt.org/z/hZ-ibs)
 
 ```cpp
 // Different prices for different apples
@@ -60,7 +61,7 @@ We've done something similar earlier, we needed to pass the instance of the obje
 
 Simply swap out `apples&` for `auto&`:
 
-[goto godbolt](https://godbolt.org/z/S3NFjF)
+[goto godbolt](https://godbolt.org/z/kf_2jT)
 
 ```cpp
 ////////////////////////////////////
@@ -149,7 +150,7 @@ struct optional_type {
 
 If we try to decorate member functions that do not return optional values, we will get compile errors. 
 
-[goto godbolt](https://godbolt.org/z/FaaFmz)
+[goto godbolt](https://godbolt.org/z/3KcjnK)
 
 ```cpp
 class apples {
@@ -250,7 +251,7 @@ This will come in handy once more later.
 # The member functor: passing in self
 Python implicity passes along the instance object of the class using the special keyword `self`. Let's pass in the C++ equivalent `this` in the constructor of our member functor and pass that along to the functor's `operator()`!
 
-[goto godbolt](https://godbolt.org/z/8VABuv)
+[goto godbolt](https://godbolt.org/z/3Q3rOE)
 
 ```cpp
 // ctor
@@ -281,7 +282,7 @@ I'm all about typing less. As I get older, while I appreicate the verbose descri
 
 Let's hide the ugly alias in an enabler trait class and inherit from it instead
 
-[goto godbolt](https://godbolt.org/z/nZds2g)
+[goto godbolt](https://godbolt.org/z/ASO9a4)
 
 ```cpp
 template<typename Class>
@@ -343,7 +344,7 @@ Now, in order to dynamically decorate the private `calculate_cost_impl` implemen
 
 Our crafty member functor can point to a class member function and be used as-is even without using the `classmethod` decorator
 
-[goto godbolt](https://godbolt.org/z/dQq8JQ)
+[goto godbolt](https://godbolt.org/z/xgl424)
 
 See line 198
 ```cpp
