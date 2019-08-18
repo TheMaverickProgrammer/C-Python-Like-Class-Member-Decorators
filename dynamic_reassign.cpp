@@ -50,7 +50,7 @@ struct optional_type {
 // exception decorator for optional return types
 template<typename F>
 constexpr auto exception_fail_safe(F func)  {
-    return [func](auto&&... args) -> optional_type<decltype(func(args...))> {
+    return [func](auto&&... args) {
         using R = optional_type<decltype(func(args...))>;
 
         try {
