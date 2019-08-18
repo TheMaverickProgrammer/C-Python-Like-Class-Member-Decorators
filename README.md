@@ -1,7 +1,7 @@
 # Preface
 Read Part 1 - C++ function decorators [here](https://github.com/TheMaverickProgrammer/C-Python-like-Decorators)
 
-In this second experiment, I re-imagining the way class member functions can be decorated. In the first article, I set out to achieve a close equivalent of python function decorators without the use of magic MACROS or mocs. Using purely C++ 14 we came up with a design pattern to accept arbitrary function inputs that return a closure function, allowing programmers to aggregate functions together and in compile-time!
+In this second experiment, I re-imagine the way class member functions can be decorated. In the first article, I set out to achieve a close equivalent of python function decorators without the use of magic MACROS or mocs. Using purely C++ 14 we came up with a design pattern to accept arbitrary function inputs that return a closure function, allowing programmers to aggregate functions together and in compile-time!
 
 # C++ Python-like Class Member Decorators
 
