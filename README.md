@@ -13,14 +13,14 @@ Fails on GNU CC
 
 ### Skip the tutorial and view the final results
 ---
-[decorated member functor with private class implementation](https://godbolt.org/z/3Q3rOE)
+[decorated member functor with private class implementation](https://godbolt.org/z/DNynV0)
 
-[dynamic member functor re-assignment](https://godbolt.org/z/cTB9S9)
+[dynamic member functor re-assignment](https://godbolt.org/z/T8BD2K)
 
 # The goal
 We left off with a demonstration that class member functions could also be decorated but I wasn't satisfied with the syntax. To refresh, we left with something that looked like this:
 
-[goto godbolt](https://godbolt.org/z/hZ-ibs)
+[goto godbolt](https://godbolt.org/z/2eeLQX)
 
 ```cpp
 // Different prices for different apples
@@ -41,7 +41,7 @@ I like python for its rich feature set and ease of use for the end programmer...
 
 In the first article, I pointed out that python member functions could be reassigned on the fly and decorated which is impossible in C++.
 
-If there was only a way these python features could make their way into C++, I'd be a happy guy. I like to have my cake and eat it too, don't you?
+If there was only a way these python features could make their way into C++, I'd be a happy guy. I like to have my cake and eat it too, don't you? 🍰
 
 # Revisit the class visitor: @classmethod
 By the end of the first article, we needed a way for our decorators to expect a class object in order to invoke a class member function. We wrote it to visit `apples` class objects and it looked like this:
@@ -61,7 +61,7 @@ We've done something similar earlier, we needed to pass the instance of the obje
 
 Simply swap out `apples&` for `auto&`:
 
-[goto godbolt](https://godbolt.org/z/kf_2jT)
+[goto godbolt](https://godbolt.org/z/nQpdfN)
 
 ```cpp
 ////////////////////////////////////
@@ -150,7 +150,7 @@ struct optional_type {
 
 If we try to decorate member functions that do not return optional values, we will get compile errors. 
 
-[goto godbolt](https://godbolt.org/z/3KcjnK)
+[goto godbolt](https://godbolt.org/z/_WJlhz)
 
 ```cpp
 class apples {
@@ -251,7 +251,7 @@ This will come in handy once more later.
 # The member functor: passing in self
 Python implicity passes along the instance object of the class using the special keyword `self`. Let's pass in the C++ equivalent `this` in the constructor of our member functor and pass that along to the functor's `operator()`!
 
-[goto godbolt](https://godbolt.org/z/3Q3rOE)
+[goto godbolt](https://godbolt.org/z/jfPytb)
 
 ```cpp
 // ctor
@@ -282,7 +282,7 @@ I'm all about typing less. As I get older, while I appreicate the verbose descri
 
 Let's hide the ugly alias in an enabler trait class and inherit from it instead
 
-[goto godbolt](https://godbolt.org/z/ASO9a4)
+[goto godbolt](https://godbolt.org/z/O5GIyz)
 
 ```cpp
 template<typename Class>
@@ -344,7 +344,7 @@ Now, in order to dynamically decorate the private `calculate_cost_impl` implemen
 
 Our crafty member functor can point to a class member function and be used as-is even without using the `classmethod` decorator
 
-[goto godbolt](https://godbolt.org/z/xgl424)
+[goto godbolt](https://godbolt.org/z/s-o-oo)
 
 See line 198
 ```cpp
@@ -390,6 +390,6 @@ This would further reduce writing and could be seen as a "promise" to the compil
 
 Ideally I wanted to use an implicit conversion operator to return `f` and avoid using an explicit star operator `operator*()`. However the compiler struggled to deduce my intentions. I can be satisfied with the fact that the star operator offers some readability.
 
-There's more that can be explored with this concept. It has opened my eyes to new possibilities with C++ and I hope it has done the same for you too. 
+There's more that can be explored with this concept. This 2nd installment to the original challenge has opened my eyes to new possibilities with C++ and I hope it has done the same for you too. 
 
-Thank you for reading.
+Thank you for reading
