@@ -116,8 +116,15 @@ template<typename T>
 struct function_traits;  
 
 // traits allows us to inspect type information from our function signature
+template<typename R, typename Class, typename... Args> 
+struct function_traits<R (Class::*)(Args...)>
+{
+    typedef R result_type;
+    using args_pack = std::tuple<Args...>;
+};
+
 template<typename R, typename... Args> 
-struct function_traits<std::function<R(Args...)>>
+struct function_traits<R(Args...)>
 {
     typedef R result_type;
     using args_pack = std::tuple<Args...>;
@@ -198,7 +205,7 @@ public:
     ~apples() { }
 
     // define a functor with the same signature as our member function
-    memberfunc<optional_type<double>(int, double)> calculate_cost;
+    memberfunc<double(int, double)> calculate_cost;
 };
 
 ////////////////////////////////////
