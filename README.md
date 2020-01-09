@@ -195,7 +195,7 @@ Let's inspect the contents of the function signatures that we expect our member 
 
 ```cpp
     // define a functor with the same signature as our member function
-    memberfunc<optional_type<double>(int, double)> calculate_cost;
+    memberfunc<double(int, double)> calculate_cost;
     
     ...
     
@@ -388,18 +388,6 @@ Bag cost $18.203
 > Logged at Sun Aug 18 18:00:15 2019
 ```
 
-# Further Exploration
-We could reduce typing by adding a function-trait specialization for the following syntax
-
-```cpp
-  // decltype yeilds T = double(apples::*)(double, int)
-  memberfunc<decltype(&apples::calculate_cost_impl)> calculate_cost;
-```
-
-This would further reduce writing and could be seen as a "promise" to the compiler that the functor will match the decorated member function. 
-
-Ideally I wanted to use an implicit conversion operator to return `f` and avoid using an explicit star operator `operator*()`. However the compiler struggled to deduce my intentions. I can be satisfied with the fact that the star operator offers some clarity.
-
-There's more that can be explored with this concept. This 2nd installment to the original challenge has opened my eyes to new possibilities with C++ and I hope it has done the same for you too. 
+# End
 
 Thank you for reading
