@@ -13,7 +13,7 @@ Works 100% on MSVC, Clang, and GNU CC compilers
 ---
 [decorated member functor with private class implementation](https://godbolt.org/z/DNynV0)
 
-[dynamic member functor re-assignment](https://godbolt.org/z/VsaETF)
+[dynamic member functor re-assignment](https://godbolt.org/z/DSsZRm)
 
 # The goal
 We left off with a demonstration that class member functions could also be decorated but I wasn't satisfied with the syntax. To refresh, we left with something that looked like this:
@@ -212,16 +212,23 @@ First, we need to somehow pull the argument list out of the function sig as well
 template<typename T> 
 struct function_traits;  
 
-// traits allows us to inspect type information from our functor signature
+// traits allows us to inspect type information from our function signature
+template<typename R, typename Class, typename... Args> 
+struct function_traits<R (Class::*)(Args...)>
+{
+    typedef R result_type;
+    using args_pack = std::tuple<Args...>;
+};
+
 template<typename R, typename... Args> 
-struct function_traits<std::function<R(Args...)>>
+struct function_traits<R(Args...)>
 {
     typedef R result_type;
     using args_pack = std::tuple<Args...>;
 };
 ```
 
-This is a simple function-trait utlity structure. All we care about is the ability to deduce the return type and argument list from a `std::function<>` functor. Now we can write an alias to deduce the correct `class_memberfunction` signature.
+This is a simple function-trait utlity structure. All we care about is the ability to deduce the return type and argument list from any kind of callable. Now we can write an alias to deduce the correct `class_memberfunction` signature.
 
 ```cpp
 class apples {
@@ -232,8 +239,8 @@ class apples {
     template<typename Type>
     using memberfunc = class_memberfunc<
       apples, 
-      typename function_traits<std::function<Type>>::result_type, 
-      typename function_traits<std::function<Type>>::args_pack
+      typename function_traits<Type>::result_type, 
+      typename function_traits<Type>::args_pack
     >;
 ```
 
@@ -241,15 +248,20 @@ With this short-hand we don't need to type out everything explicitly.
 
 ```cpp
     // define a functor with the same signature as our member function
-    memberfunc<optional_type<double>(int, double)> calculate_cost;
+    memberfunc<double(int, double)> calculate_cost;
+```
+We can also let the compiler figure out our signature for us. This way we only modify one place in the code and the rest will follow.
+
+```cpp
+    memberfunc<decltype(&apples::calculate_cost_impl)> calculate_cost;
 ```
 
-This will come in handy once more later.
+Handy!
 
 # The member functor: passing in self
 Python implicity passes along the instance object of the class using the special keyword `self`. Let's pass in the C++ equivalent `this` in the constructor of our member functor and pass that along to the functor's `operator()`!
 
-[goto godbolt](https://godbolt.org/z/jfPytb)
+[goto godbolt](https://godbolt.org/z/eSv7um)
 
 ```cpp
 // ctor
@@ -280,7 +292,7 @@ I'm all about typing less. As I get older, while I appreicate the verbose descri
 
 Let's hide the ugly alias in an enabler trait class and inherit from it instead
 
-[goto godbolt](https://godbolt.org/z/O5GIyz)
+[goto godbolt](https://godbolt.org/z/YfLR7a)
 
 ```cpp
 template<typename Class>
@@ -292,14 +304,14 @@ class enable_memberfunc_traits {
     */
     template<typename Type>
     using memberfunc = class_memberfunc<Class, 
-    typename function_traits<std::function<Type>>::result_type, 
-    typename function_traits<std::function<Type>>::args_pack>;
+    typename function_traits<Type>::result_type, 
+    typename function_traits<Type>::args_pack>;
 };
 
 class apples : public enable_memberfunc_traits<apples> {
     // ... omitted ...
     
-    memberfunc<optional_type<double>(int, double)> calculate_cost;
+    memberfunc<decltype(&apples::calculate_cost_impl)> calculate_cost;
 };
 ```
 
@@ -342,7 +354,7 @@ Now, in order to dynamically decorate the private `calculate_cost_impl` implemen
 
 Our crafty member functor can point to a class member function and be used as-is even without using the `classmethod` decorator
 
-[goto godbolt](https://godbolt.org/z/s-o-oo)
+[goto godbolt](https://godbolt.org/z/58sUAW)
 
 See line 198
 ```cpp
