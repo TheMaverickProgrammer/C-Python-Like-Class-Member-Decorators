@@ -35,9 +35,7 @@ auto vec = {
 
 Which is ugly and inconvenient if we want to pass objects around our system, we would need to have access to these decorators in each file and rewrite our code to use these decorators instead of the object's own methods.
 
-I like python for its rich feature set and ease of use for the end programmer... but I have always been, and may always be, a C++ fanatic because of the speed, immediate control of memory, and strict typeness. If only there was a way to unite the two...
-
-In the first article, I pointed out that python member functions could be reassigned on the fly and decorated which is impossible in C++.
+In the first article, I pointed out that python member functions could be reassigned on the fly and decorated which is impossible in vanilla C++. There may be times when I want to log a function **in one particular location** instead of seeing logs every time the function is called. With dynamic reassignment, I could decorate the function on the fly, invoke it, and set it back to the original implementation afterwards.
 
 If there was only a way these python features could make their way into C++, I'd be a happy guy. I like to have my cake and eat it too, don't you? 🍰
 
