@@ -70,7 +70,8 @@ constexpr auto exception_fail_safe(F func)  {
 template<typename F>
 constexpr auto output(F func) {
     return [func](auto&&... args) {
-        auto opt = func(args...);
+        auto value = func(args...);
+        auto opt = optional_type<decltype(value)>(value);
         
         if(opt.BAD) {
             std::cout << "There was an error: " << opt.msg << std::endl;
@@ -116,6 +117,13 @@ template<typename T>
 struct function_traits;  
 
 // traits allows us to inspect type information from our function signature
+template<typename R, typename Class, typename... Args> 
+struct function_traits<R (Class::*)(Args...)>
+{
+    typedef R result_type;
+    using args_pack = std::tuple<Args...>;
+};
+
 template<typename R, typename... Args> 
 struct function_traits<std::function<R(Args...)>>
 {
@@ -167,8 +175,8 @@ class enable_memberfunc_traits {
     */
     template<typename Type>
     using memberfunc = class_memberfunc<Class, 
-    typename function_traits<std::function<Type>>::result_type, 
-    typename function_traits<std::function<Type>>::args_pack>;
+    typename function_traits<Type>::result_type, 
+    typename function_traits<Type>::args_pack>;
 };
 
 ///////////////////////////////////////////////
@@ -192,7 +200,7 @@ public:
 
     // ctor
     apples(double cost_per_apple) : 
-        calculate_cost(memberfunc<optional_type<double>(int, double)>(this)), 
+        calculate_cost(this), 
         cost_per_apple(cost_per_apple) { 
             this->calculate_cost = &apples::calculate_cost_impl;
         }
@@ -200,7 +208,7 @@ public:
     ~apples() { }
 
     // define a functor with the same signature as our member function
-    memberfunc<optional_type<double>(int, double)> calculate_cost;
+    memberfunc<decltype(&apples::calculate_cost_impl)> calculate_cost;
 };
 
 ////////////////////////////////////
