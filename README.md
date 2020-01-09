@@ -356,7 +356,7 @@ Our crafty member functor can point to a class member function and be used as-is
 
 [goto godbolt](https://godbolt.org/z/58sUAW)
 
-See line 198
+See line 206
 ```cpp
    // in apples ctor
    this->calculate_cost = &apples::calculate_cost_impl;
@@ -364,7 +364,7 @@ See line 198
 
 Now we can dynamically decorate the member function. Plus we can assign a function to a decorated version of itself.
 
-Take a look at line 218 - 224
+Take a look at line 226 - 232
 
 ```cpp
    groceries1.calculate_cost = exception_fail_safe(classmethod(&apples::calculate_cost_impl));
