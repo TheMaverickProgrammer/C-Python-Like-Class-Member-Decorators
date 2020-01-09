@@ -11,7 +11,7 @@ Works 100% on MSVC, Clang, and GNU CC compilers
 
 ### Skip the tutorial and view the final results
 ---
-[decorated member functor with private class implementation](https://godbolt.org/z/DNynV0)
+[decorated member functor with private class implementation](https://godbolt.org/z/yy9_Ef)
 
 [dynamic member functor re-assignment](https://godbolt.org/z/DSsZRm)
 
