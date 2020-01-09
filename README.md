@@ -266,7 +266,7 @@ Python implicity passes along the instance object of the class using the special
 ```cpp
 // ctor
 apples(double cost_per_apple) : 
-    calculate_cost(memberfunc<optional_type<double>(int, double)>(this)), 
+    calculate_cost(this), 
     cost_per_apple(cost_per_apple) { 
         // decorate our member function in ctor
         this->calculate_cost = log_time(output(exception_fail_safe(classmethod(&apples::calculate_cost_impl))));
