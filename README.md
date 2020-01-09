@@ -13,7 +13,7 @@ Works 100% on MSVC, Clang, and GNU CC compilers
 ---
 [decorated member functor with private class implementation](https://godbolt.org/z/DNynV0)
 
-[dynamic member functor re-assignment](https://godbolt.org/z/T8BD2K)
+[dynamic member functor re-assignment](https://godbolt.org/z/VsaETF)
 
 # The goal
 We left off with a demonstration that class member functions could also be decorated but I wasn't satisfied with the syntax. To refresh, we left with something that looked like this:
